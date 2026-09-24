@@ -135,6 +135,8 @@ LOGOUT_REDIRECT_URL = 'foto_list'
 CSRF_TRUSTED_ORIGINS = [
     'https://*.app.github.dev',
     'https://*.githubpreview.dev',
+    'https://localhost:8000',
+    'http://localhost:8000',
 ]
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 USE_X_FORWARDED_HOST = True
