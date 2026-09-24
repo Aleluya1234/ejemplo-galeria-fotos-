@@ -25,9 +25,8 @@ SECRET_KEY = 'django-insecure-i121#r&ql&e*kjl(yr9qzw)#tshaxq29-$&-rl1j67c85+gb!b
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
-CSRF_TRUSTED_ORIGINS = ['https://*.app.github.dev']
 
 # Application definition
 
@@ -130,4 +129,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'foto_list'
 LOGOUT_REDIRECT_URL = 'foto_list'
-CSRF_TRUSTED_ORIGINS = ['https://*.app.github.dev']
+
+
+# ── Codespaces: confiar en el dominio público que usa GitHub para exponer el puerto ──
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.app.github.dev',
+    'https://*.githubpreview.dev',
+]
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
