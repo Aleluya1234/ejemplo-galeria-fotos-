@@ -130,3 +130,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'foto_list'
 LOGOUT_REDIRECT_URL = 'foto_list'
+CSRF_TRUSTED_ORIGINS = ['https://*.app.github.dev']
