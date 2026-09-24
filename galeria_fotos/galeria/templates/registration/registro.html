@@ -1,0 +1,17 @@
+{# Bloque 4 · Registro. UserCreationForm trae usuario, contraseña y confirmación, con las validaciones de Django. #}
+{% extends "base.html" %}
+{% block titulo %}Registrarse{% endblock %}
+
+{% block contenido %}
+<div class="caja">
+  <h1>Crear cuenta</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="acciones">
+      <button class="btn" type="submit">Registrarme</button>
+      <a class="btn claro" href="{% url 'login' %}">Ya tengo cuenta</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

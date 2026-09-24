@@ -1,0 +1,27 @@
+{# Bloque 2 · El template del formulario (slide 11). Lo comparten CreateView, UpdateView y crear_foto. #}
+{% extends "base.html" %}
+{% block titulo %}{% if object %}Editar{% else %}Nueva foto{% endif %}{% endblock %}
+
+{% block contenido %}
+<div class="caja">
+  <h1>{% if object %}Editar «{{ object.titulo }}»{% else %}Nueva foto{% endif %}</h1>
+
+  <form method="post">
+    {% csrf_token %}          {# Bloque 4 (slide 19): obligatorio en todo form POST; sin él → 403 #}
+    {{ form.as_p }}           {# cada campo dentro de un <p>; también existe as_table y as_ul #}
+    <div class="acciones">
+      <button class="btn" type="submit">Guardar</button>
+      <a class="btn claro" href="{% if object %}{% url 'foto_detail' object.pk %}{% else %}{% url 'foto_list' %}{% endif %}">Cancelar</a>
+    </div>
+  </form>
+
+  {# Vista previa en vivo de la URL escrita: es solo JS del navegador, no toca Django #}
+  <p class="meta" style="margin-top:1rem">Vista previa:</p>
+  <img id="preview" src="{{ form.url_imagen.value|default:'' }}" alt="" style="max-width:100%;border-radius:8px;{% if not form.url_imagen.value %}display:none{% endif %}">
+  <script>
+    const campo = document.getElementById('id_url_imagen');
+    const img = document.getElementById('preview');
+    campo.addEventListener('input', () => { img.src = campo.value; img.style.display = campo.value ? '' : 'none'; });
+  </script>
+</div>
+{% endblock %}

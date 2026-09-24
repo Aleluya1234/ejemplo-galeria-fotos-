@@ -1,0 +1,19 @@
+{# DeleteView → galeria/foto_confirm_delete.html. GET muestra esto; el POST del form borra. #}
+{% extends "base.html" %}
+{% block titulo %}Borrar{% endblock %}
+
+{% block contenido %}
+<div class="caja">
+  <h1>¿Borrar «{{ object.titulo }}»?</h1>
+  <img src="{{ object.url_imagen }}" alt="{{ object.titulo }}" style="max-width:100%;border-radius:8px">
+  <p>Esta acción no se puede deshacer (igual que <code>.delete()</code> en el ORM: borra de verdad y sin preguntar).</p>
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="acciones">
+      <button class="btn secundario" type="submit">Sí, borrar</button>
+      <a class="btn claro" href="{% url 'foto_detail' object.pk %}">Cancelar</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{# Bloque 4 · Login. LoginView (django.contrib.auth.urls) busca este template por convención. #}
+{% extends "base.html" %}
+{% block titulo %}Iniciar sesión{% endblock %}
+
+{% block contenido %}
+<div class="caja">
+  <h1>Iniciar sesión</h1>
+
+  {% if form.errors %}
+    <div class="aviso">Usuario o contraseña incorrectos.</div>
+  {% endif %}
+  {% if next %}
+    <div class="aviso">Esa página requiere iniciar sesión. Después del login volverás a ella.</div>
+  {% endif %}
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    {# `next` es a dónde quería ir el usuario cuando @login_required lo detuvo #}
+    <input type="hidden" name="next" value="{{ next }}">
+    <div class="acciones">
+      <button class="btn" type="submit">Entrar</button>
+      <a class="btn claro" href="{% url 'registro' %}">Crear cuenta</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

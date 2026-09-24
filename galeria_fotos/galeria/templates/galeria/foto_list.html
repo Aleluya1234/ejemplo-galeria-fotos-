@@ -1,0 +1,33 @@
+{# ListView → galeria/foto_list.html. El QuerySet llega como `object_list` (o `foto_list`). #}
+{% extends "base.html" %}
+{% block titulo %}Inicio{% endblock %}
+
+{% block contenido %}
+<h1>Galería</h1>
+
+{% if not user.is_authenticated %}
+  <div class="aviso">Para subir, editar o borrar fotos necesitas <a href="{% url 'login' %}">iniciar sesión</a>.</div>
+{% endif %}
+
+<div class="grilla">
+  {% for foto in object_list %}
+    <a class="tarjeta" href="{% url 'foto_detail' foto.pk %}">
+      <img src="{{ foto.url_imagen }}" alt="{{ foto.titulo }}" loading="lazy">
+      <div class="cuerpo">
+        <h3>{{ foto.titulo }}</h3>
+        <small>{{ foto.autor|default:"anónimo" }} · {{ foto.creada|date:"d M Y" }}</small>
+      </div>
+    </a>
+  {% empty %}
+    <p>Todavía no hay fotos. {% if user.is_authenticated %}<a href="{% url 'foto_create' %}">Sube la primera</a>.{% endif %}</p>
+  {% endfor %}
+</div>
+
+{% if is_paginated %}
+  <div class="paginacion">
+    {% if page_obj.has_previous %}<a class="btn claro" href="?page={{ page_obj.previous_page_number }}">← Anteriores</a>{% endif %}
+    <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}<a class="btn claro" href="?page={{ page_obj.next_page_number }}">Siguientes →</a>{% endif %}
+  </div>
+{% endif %}
+{% endblock %}

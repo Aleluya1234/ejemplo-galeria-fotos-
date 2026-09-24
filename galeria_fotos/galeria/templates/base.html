@@ -1,0 +1,82 @@
+{# Layout común. Los demás templates lo extienden y rellenan {% block contenido %}. #}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block titulo %}Galería{% endblock %} · Galería Fotográfica</title>
+  <style>
+    :root { --rojo: #C8102E; --oscuro: #1a1a2e; --gris: #f4f4f8; --texto: #222; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; display: flex; flex-direction: column; font-family: 'Segoe UI', system-ui, sans-serif; background: var(--gris); color: var(--texto); }
+    header { background: var(--oscuro); color: #fff; padding: .8rem 1.5rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+    header a { color: #fff; text-decoration: none; }
+    header .marca { font-weight: 700; font-size: 1.2rem; }
+    header .marca span { color: var(--rojo); }
+    header nav { display: flex; gap: .2rem; margin-right: auto; }
+    header nav a { padding: .4rem .7rem; border-radius: 6px; opacity: .85; }
+    header nav a:hover, header nav a.activo { background: rgba(255,255,255,.12); opacity: 1; }
+    header .sesion { display: flex; align-items: center; gap: .6rem; }
+    footer { margin-top: 3rem; padding: 1.2rem 1.5rem; background: var(--oscuro); color: #aaa; font-size: .85rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: .5rem; }
+    footer a { color: #ddd; }
+    .btn { display: inline-block; padding: .45rem .9rem; border-radius: 6px; background: var(--rojo); color: #fff; border: 0; cursor: pointer; font-size: .95rem; text-decoration: none; }
+    .btn.secundario { background: #555; }
+    .btn.claro { background: #fff; color: var(--oscuro); border: 1px solid #ccc; }
+    main { max-width: 1100px; width: 100%; margin: 1.5rem auto; padding: 0 1rem; flex: 1; }
+    h1 { margin: .2rem 0 1rem; }
+    .grilla { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
+    .tarjeta { color: inherit; text-decoration: none; background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,.08); display: flex; flex-direction: column; }
+    .tarjeta img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; background: #ddd; }
+    .tarjeta .cuerpo { padding: .7rem .9rem; }
+    .tarjeta h3 { margin: 0 0 .25rem; font-size: 1.05rem; }
+    .tarjeta small, .meta { color: #777; font-size: .85rem; }
+    .acciones { display: flex; gap: .5rem; margin-top: 1rem; flex-wrap: wrap; }
+    form p { margin: 0 0 .9rem; }
+    form label { display: block; font-weight: 600; margin-bottom: .25rem; }
+    form input[type=text], form input[type=url], form input[type=password], form textarea { width: 100%; padding: .5rem; border: 1px solid #bbb; border-radius: 6px; font-size: 1rem; }
+    .errorlist { color: var(--rojo); margin: .2rem 0 0; padding-left: 1.2rem; font-size: .9rem; }
+    .caja { background: #fff; padding: 1.5rem; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,.08); max-width: 640px; }
+    .detalle img { width: 100%; max-height: 70vh; object-fit: contain; background: #111; border-radius: 10px; }
+    .aviso { background: #fff3cd; border-left: 4px solid #ffab00; padding: .7rem 1rem; border-radius: 6px; margin-bottom: 1rem; }
+    .paginacion { display: flex; gap: 1rem; justify-content: center; margin: 1.5rem 0; }
+  </style>
+</head>
+<body>
+<header>
+  <a class="marca" href="{% url 'foto_list' %}">📷 Galería <span>Fotográfica</span></a>
+
+  {# Navbar: enlaces con name= de urls.py. request.resolver_match marca la página activa. #}
+  <nav>
+    <a href="{% url 'foto_list' %}" class="{% if request.resolver_match.url_name == 'foto_list' %}activo{% endif %}">Inicio</a>
+    {% if user.is_authenticated %}
+      <a href="{% url 'foto_create' %}" class="{% if request.resolver_match.url_name == 'foto_create' %}activo{% endif %}">Nueva foto</a>
+    {% endif %}
+    {% if user.is_staff %}<a href="{% url 'admin:index' %}">Admin</a>{% endif %}
+  </nav>
+
+  {# Bloque 4 · Sesiones (slide 18): el template sabe quién eres con `user` #}
+  <div class="sesion">
+  {% if user.is_authenticated %}
+    <span>Hola, <strong>{{ user.username }}</strong></span>
+    {# Logout debe ser POST (y llevar csrf_token): un GET no puede cerrar sesión #}
+    <form method="post" action="{% url 'logout' %}" style="margin:0">
+      {% csrf_token %}
+      <button class="btn secundario" type="submit">Salir</button>
+    </form>
+  {% else %}
+    <a class="btn claro" href="{% url 'registro' %}">Registrarse</a>
+    <a class="btn" href="{% url 'login' %}">Iniciar sesión</a>
+  {% endif %}
+  </div>
+</header>
+
+<main>
+  {% block contenido %}{% endblock %}
+</main>
+
+<footer>
+  <span>INACAP · Programación Back End · Semana 5 — CRUD con Django ORM, Formularios y Seguridad</span>
+  <span>Hecho con <a href="https://docs.djangoproject.com/es/5.2/">Django</a> · fotos de <a href="https://picsum.photos">picsum.photos</a></span>
+</footer>
+</body>
+</html>
